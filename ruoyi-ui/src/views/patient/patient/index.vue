@@ -1,14 +1,7 @@
 <template>
   <div class="app-container">
     <el-form :model="queryParams" ref="queryForm" size="small" :inline="true" v-show="showSearch" label-width="68px">
-      <el-form-item label="病历号" prop="medicalRecordId">
-        <el-input
-          v-model="queryParams.medicalRecordId"
-          placeholder="请输入病历号"
-          clearable
-          @keyup.enter.native="handleQuery"
-        />
-      </el-form-item>
+     
       <el-form-item label="患者姓名" prop="name">
         <el-input
           v-model="queryParams.name"
@@ -43,29 +36,13 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="手术时间" prop="operationTime">
-        <el-date-picker clearable
-          v-model="queryParams.operationTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择手术时间">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item label="手术负责人" prop="operationDoctor">
+      <el-form-item label="病历号" prop="medicalRecordId">
         <el-input
-          v-model="queryParams.operationDoctor"
-          placeholder="请输入手术负责人"
+          v-model="queryParams.medicalRecordId"
+          placeholder="请输入病历号"
           clearable
           @keyup.enter.native="handleQuery"
         />
-      </el-form-item>
-      <el-form-item label="复诊时间" prop="reviewTime">
-        <el-date-picker clearable
-          v-model="queryParams.reviewTime"
-          type="date"
-          value-format="yyyy-MM-dd"
-          placeholder="请选择复诊时间">
-        </el-date-picker>
       </el-form-item>
       <el-form-item label="左眼球镜" prop="leftSph">
         <el-input
@@ -115,7 +92,33 @@
           @keyup.enter.native="handleQuery"
         />
       </el-form-item>
-      <el-form-item label="创建时间" prop="createdTime">
+      <el-form-item label="手术负责人" prop="operationDoctor">
+        <el-input
+          v-model="queryParams.operationDoctor"
+          placeholder="请输入手术负责人"
+          clearable
+          @keyup.enter.native="handleQuery"
+        />
+      </el-form-item>
+      <el-form-item label="手术时间" prop="operationTime">
+        <el-date-picker clearable
+          v-model="queryParams.operationTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择手术时间">
+        </el-date-picker>
+      </el-form-item>
+     
+      <el-form-item label="复诊时间" prop="reviewTime">
+        <el-date-picker clearable
+          v-model="queryParams.reviewTime"
+          type="date"
+          value-format="yyyy-MM-dd"
+          placeholder="请选择复诊时间">
+        </el-date-picker>
+      </el-form-item>
+     
+      <!-- <el-form-item label="创建时间" prop="createdTime">
         <el-date-picker clearable
           v-model="queryParams.createdTime"
           type="date"
@@ -130,7 +133,7 @@
           value-format="yyyy-MM-dd"
           placeholder="请选择更新时间">
         </el-date-picker>
-      </el-form-item>
+      </el-form-item> -->
       <el-form-item>
         <el-button type="primary" icon="el-icon-search" size="mini" @click="handleQuery">搜索</el-button>
         <el-button icon="el-icon-refresh" size="mini" @click="resetQuery">重置</el-button>
@@ -183,10 +186,10 @@
       <right-toolbar :showSearch.sync="showSearch" @queryTable="getList"></right-toolbar>
     </el-row>
 
+     <!-- 表格部分，表头 -->
     <el-table v-loading="loading" :data="patientList" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55" align="center" />
-      <el-table-column label="主键id" align="center" prop="id" />
-      <el-table-column label="病历号" align="center" prop="medicalRecordId" />
+      <el-table-column label="序号" align="center" prop="id" />
       <el-table-column label="患者姓名" align="center" prop="name" />
       <el-table-column label="性别" align="center" prop="sex">
         <template slot-scope="scope">
@@ -194,37 +197,16 @@
         </template>
       </el-table-column>
       <el-table-column label="年龄" align="center" prop="age" />
-      <el-table-column label="手机号" align="center" prop="phoneNumber" />
-      <el-table-column label="手术类型" align="center" prop="operationType" />
-      <el-table-column label="手术时间" align="center" prop="operationTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.operationTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="手术负责人" align="center" prop="operationDoctor" />
-      <el-table-column label="复诊时间" align="center" prop="reviewTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.reviewTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="左眼球镜" align="center" prop="leftSph" />
-      <el-table-column label="右眼球镜" align="center" prop="rightSph" />
-      <el-table-column label="左眼柱镜" align="center" prop="leftCyl" />
-      <el-table-column label="右眼柱镜" align="center" prop="rightCyl" />
-      <el-table-column label="左眼轴位" align="center" prop="leftAxis" />
-      <el-table-column label="右眼轴位" align="center" prop="rightAxis" />
-      <el-table-column label="创建时间" align="center" prop="createdTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.createdTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="更新时间" align="center" prop="updatedTime" width="180">
-        <template slot-scope="scope">
-          <span>{{ parseTime(scope.row.updatedTime, '{y}-{m}-{d}') }}</span>
-        </template>
-      </el-table-column>
+      <el-table-column label="联系方式" align="center" prop="phoneNumber" />
+      <el-table-column label="病历号" align="center" prop="medicalRecordId" />
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
+          <el-button
+            size="mini"
+            type="text"
+            icon="el-icon-view"
+            @click="handleDetail(scope.row)"
+          >详情</el-button>
           <el-button
             size="mini"
             type="text"
@@ -254,9 +236,7 @@
     <!-- 添加或修改患者对话框 -->
     <el-dialog :title="title" :visible.sync="open" width="500px" append-to-body>
       <el-form ref="form" :model="form" :rules="rules" label-width="80px">
-        <el-form-item label="病历号" prop="medicalRecordId">
-          <el-input v-model="form.medicalRecordId" placeholder="请输入病历号" />
-        </el-form-item>
+      
         <el-form-item label="患者姓名" prop="name">
           <el-input v-model="form.name" placeholder="请输入患者姓名" />
         </el-form-item>
@@ -274,6 +254,9 @@
         </el-form-item>
         <el-form-item label="手机号" prop="phoneNumber">
           <el-input v-model="form.phoneNumber" placeholder="请输入手机号" />
+        </el-form-item>
+        <el-form-item label="病历号" prop="medicalRecordId">
+          <el-input v-model="form.medicalRecordId" placeholder="请输入病历号" />
         </el-form-item>
         <el-form-item label="手术时间" prop="operationTime">
           <el-date-picker clearable
@@ -334,6 +317,55 @@
         <el-button @click="cancel">取 消</el-button>
       </div>
     </el-dialog>
+    
+    <!-- 患者详情弹窗 -->
+    <el-dialog :title="form.name + '的详细信息'" :visible.sync="detailOpen" width="600px" append-to-body>
+      <el-form ref="detailForm" :model="form" label-width="100px" :disabled="true">
+        <el-form-item label="病历号" prop="medicalRecordId">
+          <el-input v-model="form.medicalRecordId" />
+        </el-form-item>
+        <el-form-item label="患者姓名" prop="name">
+          <el-input v-model="form.name" />
+        </el-form-item>
+        <el-form-item label="性别" prop="sex">
+          <el-radio-group v-model="form.sex">
+            <el-radio
+              v-for="dict in dict.type.sys_user_sex"
+              :key="dict.value"
+              :label="dict.value"
+            >{{dict.label}}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="年龄" >
+          <el-input v-model="form.age" />
+        </el-form-item>
+        <!-- 其他字段按照相同模式补充 -->
+        <el-form-item label="复诊时间">
+          <el-date-picker v-model="form.reviewTime" type="date" format="yyyy-MM-dd" readonly />
+        </el-form-item>
+        <el-form-item label="手术负责人">
+          <el-input v-model="form.operationDoctor" disabled />
+        </el-form-item>
+        <el-form-item label="手术时间">
+          <el-date-picker v-model="form.operationTime" type="date" format="yyyy-MM-dd" readonly />
+        </el-form-item>
+        <el-form-item label="左眼球镜">
+          <el-input v-model="form.leftSph" disabled />
+        </el-form-item>
+        <el-form-item label="右眼球镜">
+          <el-input v-model="form.rightSph" disabled />
+        </el-form-item>
+        <el-form-item label="左眼轴位">
+          <el-input v-model="form.leftAxis" disabled />
+        </el-form-item>
+        <el-form-item label="右眼轴位">
+          <el-input v-model="form.rightAxis" disabled />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="detailOpen = false">关 闭</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -345,6 +377,8 @@ export default {
   dicts: ['sys_user_sex'],
   data() {
     return {
+      // 新增详情弹窗控制
+      detailOpen: false,
       // 遮罩层
       loading: true,
       // 选中数组
@@ -488,6 +522,14 @@ export default {
       this.reset();
       this.open = true;
       this.title = "添加患者";
+    },
+    
+    handleDetail(row) {
+      this.reset();
+      getPatient(row.id).then(response => {
+        this.form = response.data;
+        this.detailOpen = true;
+      });
     },
     /** 修改按钮操作 */
     handleUpdate(row) {
