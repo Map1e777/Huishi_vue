@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script>
+<script >
 import { scrollTo } from '@/utils/scroll-to'
 
 export default {
